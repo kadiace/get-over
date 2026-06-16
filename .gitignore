@@ -24,3 +24,6 @@
 # Plugins
 *.dll
 *.dll.meta
+
+# opencode
+.sisyphus

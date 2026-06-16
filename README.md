@@ -2,6 +2,8 @@
 
 GetOver is a simple 3D arcade game where you become a chicken that has fallen into a circular waterfall and must escape the hole. You can play game [HERE](https://kadiace.github.io/get-over/)
 
+![GetOver gameplay screenshot](thumbnail.png)
+
 ## Controls
 
 - `↑ ↓ ← →`: Move
