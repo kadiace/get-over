@@ -460,28 +460,8 @@ public sealed class PlayerController : BaseController<Define.PlayerAnimState>
 
     private void UpdateInput()
     {
-        _moveInput = ReadArrowMoveInput();
+        _moveInput = _moveAction != null ? _moveAction.ReadValue<Vector2>() : Vector2.zero;
         _jumpPressedThisFrame = _jumpAction != null && _jumpAction.WasPressedThisFrame();
-    }
-
-    private static Vector2 ReadArrowMoveInput()
-    {
-        if (Keyboard.current == null)
-            return Vector2.zero;
-
-        float x = 0f;
-        float y = 0f;
-
-        if (Keyboard.current.leftArrowKey.isPressed)
-            x -= 1f;
-        if (Keyboard.current.rightArrowKey.isPressed)
-            x += 1f;
-        if (Keyboard.current.downArrowKey.isPressed)
-            y -= 1f;
-        if (Keyboard.current.upArrowKey.isPressed)
-            y += 1f;
-
-        return Vector2.ClampMagnitude(new Vector2(x, y), 1f);
     }
 
     private void UpdateRotation(Vector3 moveDirection, Vector3 gravityDirection)
