@@ -14,6 +14,10 @@ public class InputManager
 
     public void Init()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        WebGLInput.captureAllKeyboardInput = true;
+#endif
+
         _asset = Managers.Resource.Load<InputActionAsset>("InputSystem_Actions");
         PlayerMap = _asset.FindActionMap(_playerMapName, throwIfNotFound: true);
         UIMap = _asset.FindActionMap(_uiMapName, throwIfNotFound: true);
@@ -32,8 +36,13 @@ public class InputManager
         {
             case Define.InputMode.Player:
                 PlayerMap.Enable();
+#if UNITY_WEBGL && !UNITY_EDITOR
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+#else
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
+#endif
                 break;
 
             case Define.InputMode.UI:

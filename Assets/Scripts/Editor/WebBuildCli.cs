@@ -11,8 +11,6 @@ public static class WebBuildCli
     private const string FocusableCanvasMarkup = "<canvas id=\"unity-canvas\" width=960 height=600 tabindex=\"0\"></canvas>";
     private const string CanvasQuery = "      var canvas = document.querySelector(\"#unity-canvas\");";
     private const string PointerFocusScript = "      canvas.addEventListener(\"pointerdown\", () => canvas.focus());";
-    private const string LoadingBarHideScript = "                document.querySelector(\"#unity-loading-bar\").style.display = \"none\";";
-    private const string LoadFocusScript = "                canvas.focus();";
 
     public static void BuildWebGL()
     {
@@ -57,9 +55,6 @@ public static class WebBuildCli
 
         if (!html.Contains(PointerFocusScript))
             html = html.Replace(CanvasQuery, CanvasQuery + Environment.NewLine + PointerFocusScript);
-
-        if (!html.Contains(LoadFocusScript))
-            html = html.Replace(LoadingBarHideScript, LoadFocusScript + Environment.NewLine + LoadingBarHideScript);
 
         File.WriteAllText(indexPath, html);
     }
