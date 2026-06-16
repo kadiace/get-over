@@ -7,6 +7,13 @@ using UnityEngine;
 
 public static class WebBuildCli
 {
+    private const string CanvasMarkup = "<canvas id=\"unity-canvas\" width=960 height=600 tabindex=\"-1\"></canvas>";
+    private const string FocusableCanvasMarkup = "<canvas id=\"unity-canvas\" width=960 height=600 tabindex=\"0\"></canvas>";
+    private const string CanvasQuery = "      var canvas = document.querySelector(\"#unity-canvas\");";
+    private const string PointerFocusScript = "      canvas.addEventListener(\"pointerdown\", () => canvas.focus());";
+    private const string LoadingBarHideScript = "                document.querySelector(\"#unity-loading-bar\").style.display = \"none\";";
+    private const string LoadFocusScript = "                canvas.focus();";
+
     public static void BuildWebGL()
     {
         string projectRoot = Directory.GetParent(Application.dataPath)?.FullName
@@ -35,5 +42,25 @@ public static class WebBuildCli
         BuildReport report = BuildPipeline.BuildPlayer(buildOptions);
         if (report.summary.result != BuildResult.Succeeded)
             throw new InvalidOperationException($"WebGL build failed: {report.summary.result}");
+
+        ApplyWebKeyboardFocus(outputPath);
+    }
+
+    private static void ApplyWebKeyboardFocus(string outputPath)
+    {
+        string indexPath = Path.Combine(outputPath, "index.html");
+        if (!File.Exists(indexPath))
+            throw new FileNotFoundException("WebGL index.html was not generated.", indexPath);
+
+        string html = File.ReadAllText(indexPath);
+        html = html.Replace(CanvasMarkup, FocusableCanvasMarkup);
+
+        if (!html.Contains(PointerFocusScript))
+            html = html.Replace(CanvasQuery, CanvasQuery + Environment.NewLine + PointerFocusScript);
+
+        if (!html.Contains(LoadFocusScript))
+            html = html.Replace(LoadingBarHideScript, LoadFocusScript + Environment.NewLine + LoadingBarHideScript);
+
+        File.WriteAllText(indexPath, html);
     }
 }
